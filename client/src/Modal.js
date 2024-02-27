@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 
 function CustomModal({ isOpen, onRequestClose, onCreateGroup }) {
   const [groupName, setGroupName] = useState("");
-  const [groupColor, setGroupColor] = useState("#16008B"); // Default color
+  const [groupColor, setGroupColor] = useState("#16008B");
   const modalRef = useRef();
 
   const handleGroupColorChange = (color) => {
@@ -11,7 +11,6 @@ function CustomModal({ isOpen, onRequestClose, onCreateGroup }) {
 
   const handleCreateGroup = () => {
     // Add logic to handle the creation of the group with groupName and groupColor
-    // For now, you can log the selected values
     console.log("Group Name:", groupName);
     console.log("Group Color:", groupColor);
 
@@ -59,7 +58,7 @@ function CustomModal({ isOpen, onRequestClose, onCreateGroup }) {
         </div>
         <div className="flex justify-center items-center">
           <label className="block mt-4 mb-2">Choose Color</label>
-          <div className="flex">
+          <div className="flex cursor-pointer">
             {[
               "#B38BFA",
               "#FF79F2",
@@ -70,7 +69,9 @@ function CustomModal({ isOpen, onRequestClose, onCreateGroup }) {
             ].map((color, index) => (
               <div
                 key={index}
-                className="color-option rounded-full w-6 h-6 mx-1"
+                className={`color-option rounded-full w-6 h-6 mx-1 ${
+                  groupColor === color ? "border border-slate-800" : ""
+                }`}
                 style={{ backgroundColor: color }}
                 onClick={() => handleGroupColorChange(color)}
               />

@@ -1,7 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { IoMdSend } from "react-icons/io";
 
 const Notes = () => {
+  const [notes, setNotes] = useState([]);
+
+  const handleSendClick = (newNote) => {
+    setNotes([...notes, newNote]);
+  };
   return (
     <div>
       <div className="flex flex-justify items-center p-4 bg-info">
@@ -12,7 +17,15 @@ const Notes = () => {
       </div>
       <div className="p-8 bg-accent">
         {/* maps the notes */}
-        <div className="bg-primary p-8">
+        {notes.map((note, index) => (
+          <div key={index} className="bg-primary p-8 pb-4 mb-4">
+            <p>{note.text}</p>
+            <p className="text-neutral text-right font-medium mt-4">
+              {note.timestamp}
+            </p>
+          </div>
+        ))}
+        <div className="bg-primary p-8 pb-4">
           <p>
             Another productive way to use this tool to begin a daily writing
             routine. One way is to generate a random paragraph with the
@@ -21,7 +34,7 @@ const Notes = () => {
             when the writer goes onto their day's writing projects, words are
             already flowing from their fingers.
           </p>
-          <p className="text-neutral text-right font-medium">
+          <p className="text-neutral text-right font-medium mt-4">
             9 Mar 2023 &#x2022; 10:10 AM
           </p>
         </div>
@@ -33,7 +46,16 @@ const Notes = () => {
             placeholder="Enter the text here...."
             className="p-4 h-24 w-full rounded-md"
           />
-          <button className="absolute bottom-4 right-8">
+          <button
+            className="absolute bottom-4 right-8"
+            onClick={() => {
+              const newNote = {
+                text: document.querySelector(".bg-info input").value,
+                timestamp: new Date().toLocaleString(),
+              };
+              handleSendClick(newNote);
+            }}
+          >
             <IoMdSend fill="#ABABAB" />
           </button>
         </div>
