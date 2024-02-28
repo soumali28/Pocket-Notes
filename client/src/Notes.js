@@ -63,7 +63,7 @@ const Notes = ({ groups, groupId }) => {
         ))}
 
       </div>
-      <div className="relative bottom-0 w-9/12">
+      <div className="absolute bottom-0 w-6/12 left-1/2 transform -translate-x-1/2">
         <div className="bg-info py-3 px-6 relative">
           {/* <input
             type="text"
