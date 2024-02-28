@@ -11,7 +11,7 @@ function CustomModal({ isOpen, onRequestClose, onCreateGroup }) {
   };
   const fetchGroups = async () => {
     try {
-      const response = await fetch("https://navy-blue-barracuda-slip.cyclic.app/groups");
+      const response = await fetch("https://shy-lime-tick-shoe.cyclic.app/groups");
       const data = await response.json();
       setGroups(data);
     } catch (error) {
@@ -20,7 +20,7 @@ function CustomModal({ isOpen, onRequestClose, onCreateGroup }) {
   };
   const handleCreateGroup = async () => {
     try {
-      const response = await fetch("https://navy-blue-barracuda-slip.cyclic.app/groups", {
+      const response = await fetch("https://shy-lime-tick-shoe.cyclic.app/groups", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
