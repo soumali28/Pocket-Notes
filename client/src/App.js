@@ -1,12 +1,13 @@
 import Image from "./images/image-removebg-preview 1.png";
 import { MdEnhancedEncryption, MdAddCircle } from "react-icons/md";
 import CustomModal from "./Modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Notes from "./Notes";
 
 function App() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isNoteOpen, setNoteOpen] = useState(false);
+  const [groups, setGroups] = useState([]);
 
   const openModal = () => {
     setModalOpen(true);
@@ -17,8 +18,32 @@ function App() {
   };
 
   const openNotes = () => {
-    setNoteOpen(!isNoteOpen);
+    setNoteOpen(true);
   };
+  const fetchGroups = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/groups");
+      const data = await response.json();
+      setGroups(data);
+    } catch (error) {
+      console.error("Error fetching groups:", error);
+    }
+  };
+  const generateInitials = (groupName) => {
+    const words = groupName.split(" ");
+    if (words.length === 1) {
+      return words[0].charAt(0).toUpperCase();
+    } else {
+      return `${words[0].charAt(0).toUpperCase()}${words[1]
+        .charAt(0)
+        .toUpperCase()}`;
+    }
+  };
+
+  useEffect(() => {
+    // Fetch groups when the component mounts
+    fetchGroups();
+  }, []);
 
   return (
     <div className="relative overflow-x-hidden">
@@ -30,7 +55,7 @@ function App() {
           }  items-center  bg-accent`}
         >
           {isNoteOpen ? (
-            <Notes />
+            <Notes groups={groups} />
           ) : (
             <>
               <div>
@@ -64,15 +89,19 @@ function App() {
             Pocket Notes
           </h3>
           <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
-            {/* list of notes*/}
-            <li>
-              <button className="hover:bg-accent my-2" onClick={openNotes}>
-                <div className="bg-red-200 rounded-full h-12 w-12 flex items-center justify-center text-center text-xl text-slate-800">
-                  M.N
-                </div>
-                <p className="font-bold text-lg ml-2">My notes</p>
-              </button>
-            </li>
+            {/* list of groups*/}
+            {groups.map((group) => (
+              <li key={group._id}>
+                <button className="hover:bg-accent my-2" onClick={openNotes}>
+                  <div
+                    className={`bg-${group.color} rounded-full h-12 w-12 flex items-center justify-center text-center text-xl text-slate-800`}
+                  >
+                    {generateInitials(group.name)}
+                  </div>
+                  <p className="font-bold text-lg ml-2">{group.name}</p>
+                </button>
+              </li>
+            ))}
           </ul>
         </div>
       </div>

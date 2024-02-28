@@ -3,16 +3,39 @@ import React, { useState, useEffect, useRef } from "react";
 function CustomModal({ isOpen, onRequestClose, onCreateGroup }) {
   const [groupName, setGroupName] = useState("");
   const [groupColor, setGroupColor] = useState("#16008B");
+  const [groups, setGroups] = useState([]);
   const modalRef = useRef();
 
   const handleGroupColorChange = (color) => {
     setGroupColor(color);
   };
+  const fetchGroups = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/groups");
+      const data = await response.json();
+      setGroups(data);
+    } catch (error) {
+      console.error("Error fetching groups:", error);
+    }
+  };
+  const handleCreateGroup = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/groups", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: groupName, color: groupColor }),
+      });
 
-  const handleCreateGroup = () => {
-    // Add logic to handle the creation of the group with groupName and groupColor
-    console.log("Group Name:", groupName);
-    console.log("Group Color:", groupColor);
+      const data = await response.json();
+      console.log("Group created:", data);
+
+      // Fetch groups again to update the list
+      fetchGroups();
+    } catch (error) {
+      console.error("Error creating group:", error);
+    }
 
     // Close the modal after handling the group creation
     onRequestClose();

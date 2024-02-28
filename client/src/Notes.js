@@ -1,12 +1,32 @@
 import React, { useState } from "react";
 import { IoMdSend } from "react-icons/io";
 
-const Notes = () => {
+const Notes = ({ groups }) => {
   const [notes, setNotes] = useState([]);
 
-  const handleSendClick = (newNote) => {
+  const handleSendClick = async (newNote) => {
+    try {
+      const groupId = groups.length > 0 ? groups[0]._id : null;
+      const response = await fetch(
+        `http://localhost:5000/groups/${groupId}/notes`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ text: newNote.text }),
+        }
+      );
+
+      const data = await response.json();
+      console.log("Note created:", data);
+    } catch (error) {
+      console.error("Error creating note:", error);
+    }
+
     setNotes([...notes, newNote]);
   };
+
   return (
     <div>
       <div className="flex flex-justify items-center p-4 bg-info">
@@ -21,23 +41,11 @@ const Notes = () => {
           <div key={index} className="bg-primary p-8 pb-4 mb-4">
             <p>{note.text}</p>
             <p className="text-neutral text-right font-medium mt-4">
-              {note.timestamp}
+              {note.date}
             </p>
           </div>
         ))}
-        <div className="bg-primary p-8 pb-4">
-          <p>
-            Another productive way to use this tool to begin a daily writing
-            routine. One way is to generate a random paragraph with the
-            intention to try to rewrite it while still keeping the original
-            meaning. The purpose here is to just get the writing started so that
-            when the writer goes onto their day's writing projects, words are
-            already flowing from their fingers.
-          </p>
-          <p className="text-neutral text-right font-medium mt-4">
-            9 Mar 2023 &#x2022; 10:10 AM
-          </p>
-        </div>
+       
       </div>
       <div className="absolute bottom-0 w-9/12">
         <div className="bg-info py-3 px-6 relative">
