@@ -1,30 +1,46 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IoMdSend } from "react-icons/io";
 
-const Notes = ({ groups }) => {
+const Notes = ({ groups, groupId }) => {
   const [notes, setNotes] = useState([]);
+
+  useEffect(() => {
+    // Fetch notes based on the groupId when the component mounts or groupId changes
+    const fetchNotes = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/groups/${groupId}`);
+        const data = await response.json();
+        console.log(data,'notes data')
+        setNotes(data);
+      } catch (error) {
+        console.error("Error fetching notes:", error);
+      }
+    };
+
+    fetchNotes();
+  }, [groupId]);
 
   const handleSendClick = async (newNote) => {
     try {
-      const groupId = groups.length > 0 ? groups[0]._id : null;
+      //const groupId = groups.length > 0 ? groups[0]._id : null;
       const response = await fetch(
-        `http://localhost:5000/groups/${groupId}/notes`,
+        `http://localhost:5000/groups/${groupId}`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ text: newNote.text }),
+          body: JSON.stringify({ text: newNote.text, date: newNote.timestamp }),
         }
       );
-
+  
       const data = await response.json();
       console.log("Note created:", data);
+      // Update the state only after successful response
+      setNotes([...notes, newNote]);
     } catch (error) {
       console.error("Error creating note:", error);
     }
-
-    setNotes([...notes, newNote]);
   };
 
   return (
@@ -45,11 +61,11 @@ const Notes = ({ groups }) => {
             </p>
           </div>
         ))}
-       
+
       </div>
-      <div className="absolute bottom-0 w-9/12">
+      <div className="relative bottom-0 w-9/12">
         <div className="bg-info py-3 px-6 relative">
-          <input
+          {/* <input
             type="text"
             placeholder="Enter the text here...."
             className="p-4 h-24 w-full rounded-md"
@@ -65,6 +81,33 @@ const Notes = ({ groups }) => {
             }}
           >
             <IoMdSend fill="#ABABAB" />
+          </button> */}
+          <input
+            type="text"
+            placeholder="Enter the text here...."
+            className="p-4 h-24 w-full rounded-md"
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                const newNote = {
+                  text: e.target.value,
+                  timestamp: new Date().toLocaleString(),
+                };
+                handleSendClick(newNote);
+              }
+            }}
+          />
+          <button
+            className="absolute bottom-4 right-8"
+            onClick={() => {
+              const newNote = {
+                text: document.querySelector(".bg-info input").value,
+                timestamp: new Date().toLocaleString(),
+              };
+              handleSendClick(newNote);
+            }}
+          >
+             <IoMdSend fill="#ABABAB" />
+            {/* Button content */}
           </button>
         </div>
       </div>

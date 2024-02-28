@@ -8,6 +8,7 @@ function App() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isNoteOpen, setNoteOpen] = useState(false);
   const [groups, setGroups] = useState([]);
+  const [group_Id, setGroupId]  = useState("");
 
   const openModal = () => {
     setModalOpen(true);
@@ -17,8 +18,20 @@ function App() {
     setModalOpen(false);
   };
 
-  const openNotes = () => {
+  const openNotes = async (groupId) => {
+    console.log("Opened modal for Group ID:", groupId);
+    setGroupId(groupId);
     setNoteOpen(true);
+    try {
+      // Fetch group chats using the group ID
+      const response = await fetch(`http://localhost:5000/groups/${groupId}`);
+      const data = await response.json();
+      const filteredChats = data.filter(chat => chat.groupId === groupId);
+      console.log("Filtered Group Chats:", filteredChats);
+      setNoteOpen(true);
+    } catch (error) {
+      console.error("Error fetching group chats:", error);
+    }
   };
   const fetchGroups = async () => {
     try {
@@ -29,6 +42,7 @@ function App() {
       console.error("Error fetching groups:", error);
     }
   };
+
   const generateInitials = (groupName) => {
     const words = groupName.split(" ");
     if (words.length === 1) {
@@ -55,7 +69,7 @@ function App() {
           }  items-center  bg-accent`}
         >
           {isNoteOpen ? (
-            <Notes groups={groups} />
+            <Notes groups={groups} groupId={group_Id} />
           ) : (
             <>
               <div>
@@ -91,17 +105,20 @@ function App() {
           <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
             {/* list of groups*/}
             {groups.map((group) => (
-              <li key={group._id}>
-                <button className="hover:bg-accent my-2" onClick={openNotes}>
-                  <div
-                    className={`bg-${group.color} rounded-full h-12 w-12 flex items-center justify-center text-center text-xl text-slate-800`}
-                  >
-                    {generateInitials(group.name)}
-                  </div>
-                  <p className="font-bold text-lg ml-2">{group.name}</p>
-                </button>
-              </li>
-            ))}
+  <li key={group._id}>
+    <button
+      className="hover:bg-accent my-2"
+      onClick={() => openNotes(group._id)}
+    >
+      <div
+        className={`bg-${group.color} rounded-full h-12 w-12 flex items-center justify-center text-center text-xl text-slate-800`}
+      >
+        {generateInitials(group.name)}
+      </div>
+      <p className="font-bold text-lg ml-2">{group.name}</p>
+    </button>
+  </li>
+))}
           </ul>
         </div>
       </div>
