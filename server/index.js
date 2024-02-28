@@ -10,7 +10,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Connect to MongoDB
-mongoose.connect("mongodb://localhost:27017", {
+mongoose.connect("mongodb+srv://debbaner1:Nanami@sociogram.ysjxit0.mongodb.net/", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
