@@ -47,6 +47,10 @@ const Group = mongoose.model("Group", groupSchema);
 const Note = mongoose.model("Note", noteSchema);
 
 // REST API endpoints
+app.get("/", (req, res) => {
+  res.send("Hello from the server!");
+});
+
 app.get("/groups", async (req, res) => {
   const groups = await Group.find();
   res.json(groups);

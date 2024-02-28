@@ -24,7 +24,7 @@ function App() {
     setNoteOpen(true);
     try {
       // Fetch group chats using the group ID
-      const response = await fetch(`http://localhost:5000/groups/${groupId}`);
+      const response = await fetch(`https://navy-blue-barracuda-slip.cyclic.app/groups/${groupId}`);
       const data = await response.json();
       const filteredChats = data.filter(chat => chat.groupId === groupId);
       console.log("Filtered Group Chats:", filteredChats);
@@ -35,7 +35,7 @@ function App() {
   };
   const fetchGroups = async () => {
     try {
-      const response = await fetch("http://localhost:5000/groups");
+      const response = await fetch("https://navy-blue-barracuda-slip.cyclic.app/groups");
       const data = await response.json();
       setGroups(data);
     } catch (error) {

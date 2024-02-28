@@ -8,7 +8,7 @@ const Notes = ({ groups, groupId }) => {
     // Fetch notes based on the groupId when the component mounts or groupId changes
     const fetchNotes = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/groups/${groupId}`);
+        const response = await fetch(`https://navy-blue-barracuda-slip.cyclic.app/groups/${groupId}`);
         const data = await response.json();
         console.log(data,'notes data')
         setNotes(data);
@@ -24,7 +24,7 @@ const Notes = ({ groups, groupId }) => {
     try {
       //const groupId = groups.length > 0 ? groups[0]._id : null;
       const response = await fetch(
-        `http://localhost:5000/groups/${groupId}`,
+        `https://navy-blue-barracuda-slip.cyclic.app/groups/${groupId}`,
         {
           method: "POST",
           headers: {
